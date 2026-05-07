@@ -1,69 +1,102 @@
-        console.log("Hello js");
+console.log("Hello js");
 
+let humanSelection = '';
+
+let roundCount = 0; // ✅ ADD THIS
+
+let choiceOne = document.querySelector(".rock");
+let choiceTwo = document.querySelector(".paper");
+let choiceThree = document.querySelector(".scissors");
+
+choiceOne.addEventListener('click', () => {
+    getHumanChoice("rock");
+});
+
+choiceTwo.addEventListener('click', () => {
+    getHumanChoice("paper");
+});
+
+choiceThree.addEventListener('click', () => {
+    getHumanChoice("scissors");
+});
+
+function getHumanChoice(choice) {
+    humanSelection = choice;
+}
 
 function getComputerChoice(){
-    let math = Math.random(1);
-   if(math <= 0.3) {
-        return 'Rock';
-}  else if(math > 0.3 && math <= 0.6) {
-    return 'Paper';
+    let math = Math.random();
+    if(math <= 0.3) {
+        return 'rock';
+    } else if(math > 0.3 && math <= 0.6) {
+        return 'paper';
+    } else {
+        return 'scissors';
+    }
 }
-else if(math > 0.6) {
-    return 'Scissors';
-
-}
-}
-function getHumanChoice() {
-    let choice = prompt();
-    return choice;
-}
-
-//console.log(getHumanChoice());
 
 let computerScore = 0;
 let humanScore = 0;
 
-/*   if(math <= 0.3) {
-        return 'Rock';
-}  else if(math > 0.3 && math <= 0.6) {
-    return 'Paper';
-}
-else if(math > 0.6) {
-    return 'Scissors';
+let playBtn = document.querySelector('.play');
 
-*/
-for(let r = 1; r < 6; r++) {
-function playRound(humanChoice, computerChoice) {
+playBtn.addEventListener('click', () => {
 
+    // ✅ STOP GAME AFTER 5 ROUNDS
+    if (roundCount >= 5) return;
 
-    if (humanChoice === computerChoice) return 'Tie!';
+    let computerSelection = getComputerChoice();
 
-    if (
-        (humanChoice === 'rock' && computerChoice === 'Scissors') ||
-        (humanChoice === 'paper' && computerChoice === 'Rock') ||
-        (humanChoice === 'scissors' && computerChoice === 'Paper')
-    ) {
-        return 'You win!';
+    const body = document.body;
+
+    let hSel = document.createElement('p');
+    hSel.textContent = humanSelection;
+    body.appendChild(hSel);
+
+    let cSel = document.createElement('p');
+    cSel.textContent = computerSelection;
+    body.appendChild(cSel);
+
+    function playRound(humanChoice, computerChoice) {
+
+        if (humanChoice === computerChoice) return 'Tie!';
+
+        if (
+            (humanChoice === 'rock' && computerChoice === 'scissors') ||
+            (humanChoice === 'paper' && computerChoice === 'rock') ||
+            (humanChoice === 'scissors' && computerChoice === 'paper')
+        ) {
+            humanScore++;
+            return 'You win!';
+        }
+
+        computerScore++;
+        return 'You lose!';
     }
 
-    return 'You lose!';
-}
+    playRound(humanSelection, computerSelection);
 
+    let score = document.createElement('p');
+    score.textContent = `Human: ${humanScore} | Computer: ${computerScore}`;
+    body.appendChild(score);
 
-let humanSelection = getHumanChoice();
-let computerSelection = getComputerChoice();
-console.log(humanSelection)
-console.log(computerSelection)
+    roundCount++; // ✅ ADD ROUND COUNT
 
-console.log('--------------');
-console.log('Round ' + r);
-console.log('-------------');
+    console.log(humanScore, computerScore, roundCount);
 
+    // ✅ END GAME AFTER 5 ROUNDS
+    if (roundCount === 5) {
+        let scores = document.createElement('p');
 
-playRound(humanSelection, computerSelection);
+        if (humanScore > computerScore) {
+            scores.textContent = "ENDE!! You win the game!";
+        } else if (computerScore > humanScore) {
+            scores.textContent = "ENDE!! Computer wins the game!";
+        } else {
+            scores.textContent = "ENDE!! It's a tie!";
+        }
 
-console.log(playRound(humanSelection, computerSelection));
+        body.appendChild(scores);
+    }
 
-
-
-}
+});
